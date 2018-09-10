@@ -1,6 +1,6 @@
 import { User } from './../../entities/user.entity';
 import { UpdateUserDto } from './../../dto/update.user.dto';
-import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create.user.dto';
 import { UsersService } from '../../services/users.service';
 import { Response } from 'express';
@@ -50,7 +50,7 @@ export class UsersController {
       }
   }
 
-  @Get(':id')
+  @Put(':id')
   public async updateOne(
     @Res() res: Response,
     @Param('id') id: number,
