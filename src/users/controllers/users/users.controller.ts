@@ -4,7 +4,9 @@ import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put
 import { CreateUserDto } from '../../dto/create.user.dto';
 import { UsersService } from '../../services/users.service';
 import { Response } from 'express';
+import { ApiUseTags, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 
+@ApiUseTags('users')
 @Controller('users')
 export class UsersController {
   public constructor(
@@ -12,6 +14,13 @@ export class UsersController {
   ){}
 
   @Get()
+  @ApiOperation({ title: 'Get list of users'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'return list of users' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @ApiImplicitQuery({ name: 'order', enum: ['abc', 'cba'] }  )
+  @ApiImplicitQuery({ name: 'page' }  )
+  @ApiImplicitQuery({ name: 'limit' }  )
+  @ApiImplicitQuery({ name: 'sort' }  )
   public async findAll(
     @Res() res: Response,
     @Query() queryParams: { page: number, limit: number, order: string, sort: string },
@@ -25,6 +34,9 @@ export class UsersController {
   }
 
   @Post()
+  @ApiOperation({ title: 'Create new user'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'return new created user' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
   public async create(
     @Res() res: Response,
     @Body() command: CreateUserDto,
@@ -38,6 +50,9 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiOperation({ title: 'Find user'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'return user' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
   public async findOne(
     @Res() res: Response,
     @Param('id') id: number,
@@ -51,6 +66,8 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiOperation({ title: 'Update user'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'return updated user' })
   public async updateOne(
     @Res() res: Response,
     @Param('id') id: number,
@@ -65,6 +82,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiOperation({ title: 'Delete user'})
+  @ApiResponse({ status: HttpStatus.OK, description: 'return ok' })
   public async deleteOne(
     @Res() res: Response,
     @Param('id') id: number,
