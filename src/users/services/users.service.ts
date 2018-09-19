@@ -1,6 +1,6 @@
 import { CreateUserDto } from './../dto/create.user.dto';
 import { User } from './../entities/user.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/update.user.dto';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class UsersService {
   public async findOne(id: number): Promise<User> {
     const user: User | undefined = this._users.find((item: User) => item.id === id);
     if (!user) {
-      return Promise.reject(new Error('Can not find user by id'));
+      throw new ForbiddenException('Can not find user by id');
     }
     return Promise.resolve(user);
   }
@@ -28,19 +28,19 @@ export class UsersService {
   public async updateOne(id: number, command: UpdateUserDto): Promise<User> {
     const index: number = this._users.findIndex((item: User) => item.id === id);
     if (index === -1) {
-      return Promise.reject(new Error('Can not find user by id'));
+      throw new ForbiddenException('Can not find user by id');
     }
     const updatedUser: User = { ...this._users[index], ...command };
     this._users.splice(index, 1, updatedUser);
     return Promise.resolve(updatedUser);
   }
 
-  public async deleteOne(id: number): Promise<string> {
+  public async deleteOne(id: number): Promise<{ id: number }> {
     const index: number = this._users.findIndex((item: User) => item.id === id);
     if (index === -1) {
-      return Promise.reject(new Error('Can not find user by id'));
+      throw new ForbiddenException('Can not find user by id');
     }
     this._users.splice(index, 1);
-    return Promise.resolve('Ok');
+    return Promise.resolve({id: index});
   }
 }
