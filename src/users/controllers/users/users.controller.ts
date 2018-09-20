@@ -1,6 +1,7 @@
+import { AuthGuard } from './../../../guards/auth.guard';
 import { SanitizePipe } from './../../../pipes/sanitize.pipe';
 import { UpdateUserDto } from './../../dto/update.user.dto';
-import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put, UsePipes } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put, UsePipes, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create.user.dto';
 import { UsersService } from '../../services/users.service';
 import { ApiUseTags, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
@@ -31,6 +32,7 @@ export class UsersController {
   @ApiOperation({ title: 'Create new user'})
   @ApiResponse({ status: HttpStatus.OK, description: 'return new created user' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @UseGuards(AuthGuard)
   @UsePipes(ValidationPipe, SanitizePipe)
   public async create(
     @Body() command: CreateUserDto,
