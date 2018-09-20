@@ -6,7 +6,7 @@ import { CreateUserDto } from '../../dto/create.user.dto';
 import { UsersService } from '../../services/users.service';
 import { ApiUseTags, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { ValidationPipe } from '../../../pipes/validation.pipe';
-import { LoggingInterceptor } from 'interceptors/logging.interceptor';
+import { LoggingInterceptor } from '../../../interceptors/logging.interceptor';
 
 @ApiUseTags('users')
 @Controller('users')
