@@ -1,14 +1,16 @@
 import { AuthGuard } from './../../../guards/auth.guard';
 import { SanitizePipe } from './../../../pipes/sanitize.pipe';
 import { UpdateUserDto } from './../../dto/update.user.dto';
-import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put, UsePipes, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Param, Body, HttpStatus, Res, Query, Put, UsePipes, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create.user.dto';
 import { UsersService } from '../../services/users.service';
 import { ApiUseTags, ApiOperation, ApiResponse, ApiImplicitQuery } from '@nestjs/swagger';
 import { ValidationPipe } from '../../../pipes/validation.pipe';
+import { LoggingInterceptor } from 'interceptors/logging.interceptor';
 
 @ApiUseTags('users')
 @Controller('users')
+@UseInterceptors(LoggingInterceptor)
 export class UsersController {
   public constructor(
     private readonly _usersService: UsersService,
