@@ -1,35 +1,19 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, Inject, HttpServer, HttpException, Logger } from '@nestjs/common';
+import { BaseExceptionFilter, HTTP_SERVER_REF } from '@nestjs/core';
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
+export class AllExceptionsFilter extends BaseExceptionFilter {
+  // This is to make the implementation 'compatible' with the base class
+  private static _innerLogger: Logger = new Logger('ExceptionsHandler');
 
-    const baseError: any = {
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    };
+  public constructor(@Inject(HTTP_SERVER_REF) application: HttpServer) {
+    super(application);
+  }
 
-    if (!(exception instanceof HttpException)) {
-      return response
-      .status(500)
-      .json({
-        ...baseError,
-        statusCode: 500,
-        error: 'Unhendled error',
-      });
+  public catch(exception: Error, host: ArgumentsHost): void {
+    if (exception instanceof HttpException) {
+      AllExceptionsFilter._innerLogger.error(exception.message, exception.stack);
     }
-
-    const status = exception.getStatus();
-
-    return response
-      .status(status)
-      .json({
-        ...baseError,
-        statusCode: status,
-        error: exception.message,
-      });
+    super.catch(exception, host);
   }
 }
